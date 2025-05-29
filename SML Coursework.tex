@@ -1,0 +1,584 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{changepage}
+\usepackage{alltt}
+\usepackage{fancybox}
+\usepackage{titling}
+\setlength{\droptitle}{-5em}  % Adjust this value to move title upward
+
+\begin{document}
+
+\vspace{-3em}
+\title{Statistical Machine Learning Coursework}
+\author{Student ID: UP2089114}
+\maketitle
+
+
+\noindent\textbf{\underline{Question 1}}\par
+
+\vspace{1em}
+\noindent\textbf{(a) When \( k = 2 \)}:
+\[f_X(x; \mu, 2) = \frac{1}{2c} \exp\left( -(x - \mu)^2 \right) \Rightarrow {\textbf{Normal distribution}.} \]
+
+\noindent\text{The likelihood is:}
+
+\[
+L(\mu) \propto \prod_{i=1}^{n} \exp\left( -(x_i - \mu)^2 \right)
+= \exp\left( -\sum_{i=1}^{n} (x_i - \mu)^2 \right)
+\]
+
+\noindent\text{The log-likelihood is:}
+\[\ell(\mu) = ln(\exp\left( -\sum_{i=1}^{n} (x_i - \mu)^2 \right) =
+\ell(\mu) = -\sum_{i=1}^{n} (x_i - \mu)^2
+\]
+
+\noindent\text{Taking the derivative:}
+\[
+\frac{d}{d\mu} \ell(\mu) = -2 \sum_{i=1}^{n} (x_i - \mu)
+= -2 \left( \sum x_i - n\mu \right)
+\]
+
+\noindent\text{Minimising derivative:}
+\[
+-2 \left( \sum x_i - n\mu \right) = 0
+\Rightarrow \sum x_i - n\mu= 0\] 
+
+\[\boxed {\hat{\mu}_{\text{MLE}} = \frac{1}{n} \sum x_i = mean(x)}\]
+\vspace{0.5em}
+\textbf{(b) When \( k = 1 \)}:
+
+\[
+f_X(x; \mu, 1) = \frac{1}{c} \exp\left( -|x - \mu| \right)
+\Rightarrow \textbf{Laplace distribution}.
+\]
+\vspace{1em}
+Likelihood:
+
+\[
+L(\mu) = \prod_{i=1}^{n} \exp(-|x_i - \mu|) = \exp\left( -\sum_{i=1}^{n} |x_i - \mu| \right)
+\]
+
+Log-likelihood:
+
+\[
+\ell(\mu) = \ln(L(\mu)) = -\sum_{i=1}^{n} |x_i - \mu|
+\]
+
+MLE:
+
+\[
+\frac{d}{d\mu} \ell(\mu) = -\sum_{i=1}^{n} \frac{d}{d\mu} |x_i - \mu| = -\sum_{i=1}^{n} \text{sign}(x_i - \mu)
+\]
+
+Where:
+
+\[
+\text{sign}(x_i - \mu) =
+\begin{cases}
+1 & \text{if } x_i > \mu \\
+0 & \text{if } x_i = \mu \\
+-1 & \text{if } x_i < \mu
+\end{cases}
+\]
+For the MLE to sum to zero, the number of  $x_i$ value that are bigger than  $\mu$ need to balance the number less than  $\mu$. This only occurs when  $\mu$ is the median value.
+
+\noindent\boxed{\text{Therefore, when } \frac{d}{d\mu} \ell(\mu) = 0, \text{ then } \mu = \text{median}(x)}
+
+\vspace{1em}
+\noindent\textbf{\underline{Question 2}}\par
+
+\vspace{0.5em}
+\noindent\textbf{(a)}
+\text{The Bernoulli PMF is:}
+\[
+f_X(x; p) =
+\begin{cases}
+p & \text{if } x = 1 \\
+1 - p & \text{if } x = 0
+\end{cases}
+\quad \Rightarrow \quad
+f_X(x; p) = p^{x}(1 - p)^{1 - x}
+\]
+
+\noindent\textbf{(b)}
+\text{The likelihood is:}
+
+\[
+L(p) = \prod_{i=1}^{n} f_X(x_i; p) = \prod_{i=1}^{n} p^{x_i}(1 - p)^{1 - x_i}
+=\boxed{ p^{s_n}(1 - p)^{n - s_n}}, \quad \text{where } s_n = \sum x_i
+\]
+
+\noindent\textbf{(c)}
+The log-likelihood is:
+
+\[
+\ell(p) = \log L(p) = s_n \log p + (n - s_n) \log(1 - p)
+\]
+
+Taking the derivative:
+
+\begin{align*}
+\frac{d\ell}{dp} &= \frac{s_n}{p} - \frac{n - s_n}{1 - p} \\
+0 &= \frac{s_n}{p} - \frac{n - s_n}{1 - p} \\
+\Rightarrow \frac{s_n}{p} &= \frac{n - s_n}{1 - p} \\\Rightarrow p &= \frac{s_n}{n}
+\end{align*}
+
+
+
+
+\[
+\boxed{t(x) = \frac{s_n}{n}, \text{ and with } s_n = 130, \; n = 200:\; \hat{p} = \frac{130}{200} = 0.65}
+\]
+
+
+
+\noindent\textbf{(d)}
+For Bernoulli trials:
+
+\[
+\text{Var}(p) = \frac{p(1 - p)}{n} \quad \Rightarrow \quad
+\text{SE} = \sqrt{ \frac{p(1 - p)}{n} }
+\]
+
+
+Since $p$ is unknown, we use the estimate $\hat{p}_{\text{MLE}} = \frac{s_n}{n}$.
+\[
+\boxed{
+\widehat{\text{SE}} = \sqrt{ \frac{\hat{p}(1 - \hat{p})}{n} }, \quad \text{where } \hat{p} = \frac{s_n}{n} = \frac{\sum x_i}{n}
+}
+\]
+
+\noindent\textbf{(e)}
+
+\[
+\hat{p} = \frac{130}{200} = 0.65
+\qquad
+\widehat{\text{SE}} = \sqrt{ \frac{0.65(1 - 0.65)}{200} } \approx 0.0337
+\]
+
+\[
+\text{95\% CI: } \hat{p} \pm 1.96 \cdot \widehat{\text{SE}} = 0.65 \pm 1.96 \cdot 0.0337 
+= \boxed{(0.584, \; 0.716)}
+\]
+
+
+\noindent\textbf{Interpretation:}  
+If we repeated this experiment many times, we are 95\% confident that this interval contains the true value of p. 
+
+\vspace{1em}
+
+\noindent\textbf{Fisher’s Principle:}  
+Fisher's principle states the expected sex ratio should be 50:50 (even split between number of male and female badgers) so p=0.5. 0.5 is outside the confidence interval, so there is strong evidence this violates Fisher's principle. It is likely this badger colony is female-biased as the interval is closer 1 (female).
+
+\vspace{1em}
+
+\noindent\textbf{(f)} Taking a Bayesian approach, treating P as a random variable.
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Prior:} Uniform prior on \( p \in [0, 1] \)
+
+    \[
+    f_P(p) =
+    \begin{cases}
+    1 & \text{if } 0 \leq p \leq 1 \\
+    0 & \text{otherwise}
+    \end{cases}
+    \quad \Rightarrow \quad f_P(p) \propto 1
+    \]
+
+    \item \textbf{Likelihood:}
+    \[
+    f_X(x \mid p) = p^{s_n}(1 - p)^{n - s_n}
+    \]
+
+    \item \textbf{Posterior:} Proportional to likelihood × prior
+    \[
+    f_{P|X}(p \mid x) \propto p^{s_n}(1 - p)^{n - s_n}
+    \]
+
+    \item \textbf{Shape of posterior:} Matches the form of the Beta distribution:
+    \[
+    f_{P|X}(p \mid x) = \text{Beta}(p \mid \alpha, \beta) \quad \text{where } \alpha = s_n + 1,\; \beta = n - s_n + 1
+    \]
+
+    \item \textbf{Posterior (normalised form):}
+    \[
+    \boxed{
+    f_{P|X}(p \mid x) = \frac{1}{B(s_n + 1,\; n - s_n + 1)} \cdot p^{s_n}(1 - p)^{n - s_n}
+    }
+    \]
+
+    \item \textbf{Distribution:}
+    \[
+    f_{P|X}(p \mid x) \sim \text{Beta}(s_n + 1, n - s_n + 1)
+    \]
+
+\end{enumerate}
+
+\noindent\textbf{(g)}\
+ \newline\indent\textbf{Parameters:} Given \( s_n = 130 \), \( n = 200 \), we have:
+\[
+f_{P|X}(p \mid x) \sim \text{Beta}(131, 71)
+\]
+Both Bayesian and Frequentist distribution is centered near 0.65, where question 4e showed: \[\hat{p}=0.65\]This indicates strong agreement between both methods. The posterior is slightly smoother, while bootstrap shows some sampling variability.
+
+\begin{figure}[H]
+    \centering
+    \caption{Posterior vs Bootstrap}
+    \includegraphics[width=0.7\linewidth]{posterior_vs_bootstrap.png}
+    \label{fig:posterior_vs_bootstrap}
+\end{figure}
+
+\noindent\textbf{(h)}
+\noindent\newline
+\textbf{Confidence interval} = [0.584, 0.716], \quad
+\newline\textbf{Credible interval:} Posterior $\text{Beta}(\alpha = 131, \beta = 71)$ 
+\vspace{1em}
+\newline\textbf{Mean} = $\frac{131}{202} = 0.6485$, \quad
+\textbf{Variance} = $\frac{131 \times 71}{202^2 \times 203} \approx 0.001128$ 
+\vspace{1em}
+\newline\textbf{Standard Error} = $\sqrt{0.001128} = 0.0335$ 
+\vspace{1em}
+\newline\textbf{95\% CI} = $0.6485 \pm 1.96 \cdot 0.0335 = \boxed{[0.5864, 0.7161]}$
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.7\textwidth}
+  \caption{Posterior vs Bootstrap}
+    \hspace{-2em} % Adjust to shift left
+    \includegraphics[width=\linewidth]{posterior_vs_bootstrap_ci.png}
+    \label{fig:posterior_vs_bootstrap}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+    \small
+    \end{minipage}
+\end{figure}
+\noindent{Both intervals are similar, indicating consistency between frequentist and Bayesian methods.}
+
+
+\vspace{1em}
+\noindent\textbf{\underline{Question 3}}\par
+
+\vspace{1em}
+\noindent\textbf{(a)}\
+
+Let \( y = \text{range (m)}, \quad x = \text{firing angle (radians)} \)
+
+\[
+\text{RSS}(a) = \sum_{i=1}^n \left( y_i - a \sin(2x_i) \right)^2
+\]
+
+Outer function:
+\[
+\frac{d}{da} \text{RSS} = 2(y_i - a \sin(2x_i))
+\]
+
+Inner function:
+\[
+\frac{d}{da}(y_i - a \sin(2x_i)) = -\sin(2x_i)
+\]
+
+So,
+\[
+\frac{d}{da} \text{RSS}(a) = \sum -2 \sin(2x_i) \left( y_i - a \sin(2x_i) \right)
+\]
+
+Set derivative to 0:
+\[
+\sum \sin(2x_i) \left( y_i - a \sin(2x_i) \right) = 0
+\]
+
+\[
+\sum y_i \sin(2x_i) - a \sum \sin^2(2x_i) = 0
+\]
+
+Solving for \( a \):
+\[
+\hat{a} = \frac{\sum_{i=1}^n y_i \sin(2x_i)}{\sum_{i=1}^n \sin^2(2x_i)}
+\]
+\vspace{1em}
+\noindent\textbf{(b)}\
+
+\[
+\begin{array}{cccccc}
+k & x & y & y \cdot \sin(2x) & \sin^2(2x) \\
+1 & 0.1 & 1.9 & 0.37747 & 0.03946 \\
+2 & 0.2 & 4.0 & 1.5576 & 0.15646 \\
+3 & 0.3 & 5.5 & 3.10553 & 0.31821 \\
+\end{array}
+\]
+
+\[
+\sum y \sin(2x) = 5.0406, \quad \sum \sin^2(2x) = 0.50993
+\]
+
+\[
+\boxed{\hat{a} = \frac{5.0406}{0.50993} = 9.89}
+\]
+
+\[
+\boxed{\textbf{Maximum Range} = 9.89\ \text{meters}}
+\]
+
+
+\vspace{1em}
+\noindent\textbf{(c)}\
+
+Model: \( Y_i = a \sin(2x_i) + \varepsilon \)
+
+Assume:
+\[
+f_{Y|X}(y|x) = \frac{1}{\sigma \sqrt{2\pi}} \exp \left( -\frac{1}{2\sigma^2}(y - a \sin(2x_i))^2 \right)
+\]
+
+Log-likelihood:
+\[
+\mathcal{L}(a, \sigma) = \prod_{i=1}^{n} \left( \frac{1}{\sqrt{2\pi} \sigma} \exp \left( -\frac{1}{2\sigma^2} (y_i - a \sin(2x_i))^2 \right) \right)
+\]
+
+\[
+= \left( \frac{1}{\sqrt{2\pi} \sigma} \right)^n \exp \left( -\frac{1}{2\sigma^2} \sum_{i=1}^{n} (y_i - a \sin(2x_i))^2 \right)
+\]
+
+\[
+= \frac{1}{\sigma^n (2\pi)^{n/2}} \exp \left( -\frac{\text{RSS}(a)}{2\sigma^2} \right)
+\]
+
+So,
+\[
+\mathcal{L}(a, \sigma) = \frac{1}{\sigma^n (2\pi)^{n/2}} \exp \left( -\frac{\text{RSS}(a)}{2\sigma^2} \right)
+\]
+
+\vspace{1em}
+\noindent\textbf{Conclusion:} Why MLE and Least Squares give the same \( \hat{a} \):
+
+\noindent\text\newline{When maximising \( \mathcal{L}(a, \sigma) \) with respect to \( a \), the constant and \( \sigma \) don't depend on \( a \). The exponential term depends only on \( \text{RSS}(a) \). Therefore, maximising the likelihood is equivalent to minimising RSS and the MLE of \( a \) is the same as the least squares estimate of \( a \).}
+
+\vspace{5em}
+\noindent\textbf{\underline{Question 4a}}\par
+\vspace{0.5em}
+
+\begin{figure}[H]
+\noindent % Push everything to the left (remove indent)
+\caption{Smoothing Curves}
+
+\begin{minipage}[t]{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Curve 1.png}
+    \vspace{1em}
+    \includegraphics[width=\linewidth]{Curve 2.png}
+    \vspace{1em}
+    \includegraphics[width=\linewidth]{Curve 3.png}
+\end{minipage}%
+\hspace{0.5em}
+\begin{minipage}[t]{0.48\textwidth}
+    \raisebox{3.5cm}[0pt][0pt]{%
+    \begin{minipage}[t]{\textwidth}
+        \begin{center}
+            \textbf{Model Building Explanation}
+        \end{center}
+        \begin{itemize}
+            \item From the SciPy library, I used spline smoothing to remove noise from Elizabeth's dots and produce smooth curves she was aiming for.
+            \item Firstly, I measured how far along the curve each dot is by parameterising the points by 'arc length.'
+            \item Then, separate smoothing splines were fitted to the x and y coordinates of each point using \texttt{UnivariateSpline}.
+            \item I controlled the amount of smoothing using a parameter \texttt{s} by using 5-fold cross-validation (from \texttt{scikit-learn}) to automatically find the best value for \texttt{s}, based on minimising error rather than adjusting parameters manually by eye.
+            \item Since Elizabeth's drawing was done by hand, and mine was produced automatically from noisy data, the smooth curve produced did not precisely match her target curve. The algorithm used optimised for smoothness rather than similarity to Elizabeth's drawing. 
+        \end{itemize}
+    \end{minipage}
+    }
+\end{minipage}
+
+\vspace{1em}
+
+\noindent
+\textbf{Pseudocode:}
+
+\begin{verbatim}
+FUNCTION SmoothAndExtendDoubled(x, y, resolution = 200):
+    // Step 1: Parameterise curve by the arc length
+    t = cumulative sum of distances between (x, y) points
+    Normalise t to range [0, 1]
+
+    // Step 2: Smoothing parameters for x and y
+    s_x = ComputeOptimalSmoothingParameter(t, x)
+    s_y = ComputeOptimalSmoothingParameter(t, y)
+
+    // Step 3: Fitting smoothing splines to x and y using t
+    spline_x = FitSpline(t, x, smoothing = s_x)
+    spline_y = FitSpline(t, y, smoothing = s_y)
+\end{verbatim}
+
+\end{figure}
+
+
+       
+\noindent\parbox{\textwidth}{
+\vspace{-1em}
+{\small\underline{\textbf{Question 4b}}}
+\vspace{0.5em}
+
+\begin{figure}[H]
+\caption{Extended curves after smoothing}
+
+\makebox[0pt][l]{\hspace*{-4em}
+
+\begin{minipage}[t]{0.45\textwidth}
+    \includegraphics[width=1.3\linewidth]{Curve 1 Extended.png}
+    \vspace{1em}
+    \includegraphics[width=1.3\linewidth]{Curve 2 Extended.png}
+    \vspace{1em}
+    \includegraphics[width=1.3\linewidth]{Curve 3 Extended.png}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.5\textwidth}
+    \hspace{5em}
+    \raisebox{6.5cm}[0pt][0pt]{%
+    \begin{minipage}[t]{\textwidth}
+        \begin{center}
+            \textbf{Extension Explanation}
+        \end{center}
+        \begin{itemize}
+            \item I used the smoothed curve from Part (a), which had 200 points.
+            \item Then, created another 200 points that continue the curve naturally, which then repeated the smoothed shape. 
+            \item This totalled to 400 smooth points, with the second set of 200 points being a continuation that follows the same pattern. 
+            \item The process is also fully automated, see pseudocode below.
+
+           \item[] % no bullet
+{\footnotesize
+\begin{adjustwidth}{-0.9cm}{}
+\begin{tabular}{|l|}
+\hline
+\ttfamily
+FUNCTION SmoothAndExtendDoubled(x, y, resolution = 200): \\
+\hspace{1em}Step 4: Extend the parameter range to double the original \\
+\hspace{1em}t\_extended = generate 2 * resolution values from 0 to 2 \\
+\\
+\hspace{1em}Step 5: Wrap modulo around spline to simulate extension \\
+\hspace{1em}x\_extended = EvaluateSpline(spline\_x, t\_extended mod 1) \\
+\hspace{1em}y\_extended = EvaluateSpline(spline\_y, t\_extended mod 1) \\
+\\
+\hspace{1em}RETURN x\_extended, y\_extended, resolution \\
+\hline
+\end{tabular}
+\end{adjustwidth}
+}        \end{itemize}
+    \end{minipage}
+    }
+\end{minipage}
+} % end makebox
+
+\end{figure}
+}
+
+
+
+\noindent\textbf{\underline{Question 5a}}\par
+\noindent A multinomial logistic regression classifier was trained to predict Dave's emotional state from the measurements of his mouth shape. New, unseen data was produced by splitting the dataset into training (70\%) and an unseen test set (30\%). The model was evaluated on the unseen test set and had an overall accuracy of 67.30\%.
+
+\begin{figure}[H]
+\caption{Logistic Regression Results on Emotion Classification (Mouth Shape Only)}
+
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{\% Correct} & \textbf{\% Incorrect} \\
+\hline
+0 (happy) & 0.73 & 0.71 & 0.72 & 71.3\% & 28.7\% \\
+1 (sad) & 0.73 & 0.89 & 0.81 & 89.2\% & 10.8\% \\
+2 (stimulated) & 0.51 & 0.40 & 0.45 & 40.2\% & 59.8\% \\
+\hline
+\end{tabular}
+\end{minipage}
+\vspace{1em}
+
+\begin{adjustwidth}{-3cm}{}
+\begin{table}[H]
+\centering
+\caption{Confusion Matrix (rows = true class, columns = predicted class)}
+\begin{tabular}{c|ccc}
+\textbf{True $\backslash$ Predicted} & \textbf{0} & \textbf{1} & \textbf{2} \\
+\hline
+\textbf{0 (happy)}      & 72 & 1  & 28 \\
+\textbf{1 (sad)}        & 1  & 91 & 10 \\
+\textbf{2 (stimulated)} & 26 & 32 & 39 \\
+\end{tabular}
+\end{table}
+\end{adjustwidth}
+
+\end{figure}  % ← YOU WERE MISSING THIS
+\vspace{-4em}
+\noindent\small{With high precision and recall, the logistic regression model performed well on 'happy' and 'sad' classes, with 'sad' classifications slightly outperforming 'happy' classes.
+The 'stimulated' class was often mistaken for the other two classes, showing significantly worse accuracy; reflected in the confusion matrix with many 'stimulated' classes incorrectly classified.
+Overall, mouth shape features help distinguish "happy" and "sad", but are less effective for "stimulated".}
+
+\vspace{1em}
+\noindent\textbf{\underline{Question 5b}}\par
+
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Pre-PCA.png}
+    \caption{Before PCA}
+    \label{fig:pre-pca}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{PCA.png}
+    \caption{After PCA}
+    \label{fig:post-pca}
+\end{minipage}
+\end{figure}
+\text\noindent\ The first scatter plot represents high dimensional data (100D) using the first 2 raw features (x1 and x2), reflecting how noisy the data is. Principal Component Analysis (PCA) was used to reduce this high dimensional data (100D) to 2 dimensions (2D). 
+\text Before PCA there was very little separation between emotions. After PCA, 'happy' and 'sad' are more distinguishable, while 'stimulated' overlaps both 'happy' and 'sad,' supporting earlier findings that the 'stimulated' emotion is harder to classify. 
+
+\vspace{1em}
+\noindent\textbf{\underline{Question 5c}}\par
+
+\noindent{K-Means clustering was applied to the PCA reduced data to group mouth configurations into 3 clusters by minimising variance within clusters. This iteratively assigned points to nearest centroids, updating them until they converged. Although the Elbow Method (Figure 9) shows sharpest drop in inertia when k=2, after k=3, improvements flatten, suggesting 3 clusters is a reasonable cutoff point. Since our dataset consists of 3 emotion labels aswell, a k-value of 3 was selected. 
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+\caption{K-Means Clustering}
+    \centering
+    \includegraphics[width=\linewidth]{K-Means Clustering .png}
+    \label{fig:kmeans}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\caption{Elbow Method}
+    \centering
+    \includegraphics[width=\linewidth]{Elbow_Method.png}
+    \label{fig:elbow}
+\end{minipage}
+\end{figure}
+
+Figure 8 shows clusters are visually distinct in 2D PCA space. Some clusters (0 and 1) align with specific emotions. Cluster 2 shows some overlap. This K-Means model suggests some emotions are separable, but others are not well-isolated.
+
+\begin{table}[H]
+\centering
+\caption{Crosstab of Predicted Clusters vs. True Emotions}
+\begin{tabular}{c|ccc}
+\textbf{Cluster} & \textbf{Happy} & \textbf{Sad} & \textbf{Stimulated} \\
+\hline
+0 & 0   & 220 & 37  \\
+1 & 313 & 0   & 148 \\
+2 & 25  & 120 & 137 \\
+\end{tabular}
+\end{table}
+
+
+\noindent{Crosstab was applied to identify each cluster's corresponding emotion label, see Table 2. Cluster 0 largely contains the 'sad' class, representing the 'sad' emotion, Cluster 1 corresponds to the 'happy' class consisting most 'happy' instances, while Cluster 2 is more mixed, with significant numbers from both 'stimulated' and 'sad,' suggesting the stimulated emotions overlaps largely with the 'sad' emotion. These results, indicate Dave's 'happy' and 'sad' emotional state formed distinct clusters, while 'stimulated' is less well-separated, matching previous findings in both PCA and classification performance.}
+
+
+
+\end{document}
